@@ -79,3 +79,8 @@ dmypy.json
 # .idea/
 # .vscode/
 tempCodeRunnerFile.py
+
+# SvelteKit
+node_modules/
+/.svelte-kit
+/build
