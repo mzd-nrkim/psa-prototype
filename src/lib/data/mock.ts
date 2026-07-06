@@ -30,7 +30,7 @@
  * ─────────────────────────────────────────────────────────────────────
  */
 
-import type { Grade, Employee, Project, Assignment, WeeklyReport } from '../types.js';
+import type { Grade, Employee, Project, Assignment, WeeklyReport, GradeRate } from '../types.js';
 
 // ─── 등급 (standardCost·billRate 단위: 만원/월) ─────────────────────────────
 export const grades: Grade[] = [
@@ -38,6 +38,17 @@ export const grades: Grade[] = [
   { id: 'G-02', name: '중급', standardCost: 520, billRate:  720 },
   { id: 'G-03', name: '고급', standardCost: 720, billRate:  980 },
   { id: 'G-04', name: '특급', standardCost: 980, billRate: 1350 },
+];
+
+// ─── 등급 시점단가 이력 ──────────────────────────────────────────────────────────
+// 각 등급의 "현재 유효"(validTo null) standardCost = grades[].standardCost 동일값
+// G-03(고급)만 2건 이상 — 경계값 TC: 과거기간 700 / 현재기간 720
+export const gradeRates: GradeRate[] = [
+  { gradeId: 'G-01', standardCost: 380, validFrom: '2026-01-01', validTo: null },
+  { gradeId: 'G-02', standardCost: 520, validFrom: '2026-01-01', validTo: null },
+  { gradeId: 'G-03', standardCost: 700, validFrom: '2026-01-01', validTo: '2026-06-30' },
+  { gradeId: 'G-03', standardCost: 720, validFrom: '2026-07-01', validTo: null },
+  { gradeId: 'G-04', standardCost: 980, validFrom: '2026-01-01', validTo: null },
 ];
 
 // ─── 직원 ────────────────────────────────────────────────────────────────────
@@ -113,19 +124,20 @@ export const projects: Project[] = [
 // [P-001] A제조 — 마진율 47.2% 🟢 양호
 // [P-002] B금융 — 마진율 36.6% 🟢 양호
 // [P-003] C유통 — 마진율 -6.7% 🔴 적자
+// startDate '2026-07-01' → G-03 현재 기간(720) 적용, 마진 검산 불변
 export const assignments: Assignment[] = [
-  // P-001
-  { projectCode: 'P-001', employeeId: 'E-01', mm: 6 },
-  { projectCode: 'P-001', employeeId: 'E-02', mm: 4 },
-  { projectCode: 'P-001', employeeId: 'E-04', mm: 4 },
+  // P-001 (startDate '2026-07-01' → 현재 단가 적용, 마진 검산 불변)
+  { projectCode: 'P-001', employeeId: 'E-01', mm: 6, startDate: '2026-07-01' },
+  { projectCode: 'P-001', employeeId: 'E-02', mm: 4, startDate: '2026-07-01' },
+  { projectCode: 'P-001', employeeId: 'E-04', mm: 4, startDate: '2026-07-01' },
   // P-002
-  { projectCode: 'P-002', employeeId: 'E-03', mm: 4 },
-  { projectCode: 'P-002', employeeId: 'E-05', mm: 3 },
-  { projectCode: 'P-002', employeeId: 'E-06', mm: 2 },
+  { projectCode: 'P-002', employeeId: 'E-03', mm: 4, startDate: '2026-07-01' },
+  { projectCode: 'P-002', employeeId: 'E-05', mm: 3, startDate: '2026-07-01' },
+  { projectCode: 'P-002', employeeId: 'E-06', mm: 2, startDate: '2026-07-01' },
   // P-003
-  { projectCode: 'P-003', employeeId: 'E-07', mm: 4 },
-  { projectCode: 'P-003', employeeId: 'E-01', mm: 2 },
-  { projectCode: 'P-003', employeeId: 'E-02', mm: 2 },
+  { projectCode: 'P-003', employeeId: 'E-07', mm: 4, startDate: '2026-07-01' },
+  { projectCode: 'P-003', employeeId: 'E-01', mm: 2, startDate: '2026-07-01' },
+  { projectCode: 'P-003', employeeId: 'E-02', mm: 2, startDate: '2026-07-01' },
 ];
 
 // ─── 주간 보고 ────────────────────────────────────────────────────────────────

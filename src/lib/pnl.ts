@@ -11,7 +11,7 @@
  *   employees 배열도 받아 employeeId → gradeId → Grade 로 조회한다.
  */
 
-import type { Assignment, Employee, Grade, Project, ProjectPnL } from './types.js';
+import type { Assignment, Employee, Grade, GradeRate, Project, ProjectPnL } from './types.js';
 
 // ─── 헬퍼 ─────────────────────────────────────────────────────────────────────
 
@@ -83,4 +83,53 @@ export function portfolioRollup(
   const marginRate = totalRevenue > 0 ? totalMargin / totalRevenue : 0;
 
   return { totalRevenue, totalCost, totalMargin, marginRate };
+}
+
+// ─── 시점단가 기반 원가 ────────────────────────────────────────────────────────
+
+/**
+ * 시점단가 기반 배정 원가.
+ *
+ * 배정의 등급(assignment.assignedGradeId ?? employee.gradeId) 와
+ * assignment.startDate 를 기준으로 유효한 GradeRate 를 찾아
+ * standardCost × mm 를 반환한다.
+ *
+ * GradeRate 없거나 startDate 없으면 grades[].standardCost 로 폴백 (무음 NaN 금지, 없으면 0).
+ */
+export function assignmentCostAtTime(
+  assignment: Assignment,
+  employees: Employee[],
+  grades: Grade[],
+  gradeRates: GradeRate[],
+): number {
+  const gradeId =
+    assignment.assignedGradeId ??
+    employees.find((e) => e.id === assignment.employeeId)?.gradeId;
+
+  if (!gradeId) return 0;
+
+  let standardCost: number | undefined;
+
+  if (assignment.startDate) {
+    const date = assignment.startDate;
+    const rate = gradeRates.find(
+      (r) =>
+        r.gradeId === gradeId &&
+        r.validFrom <= date &&
+        (r.validTo === null || date <= r.validTo),
+    );
+    standardCost = rate?.standardCost;
+  }
+
+  if (standardCost === undefined) {
+    // 폴백: grades[].standardCost (startDate 없거나 GradeRate 미매칭 시)
+    standardCost = grades.find((g) => g.id === gradeId)?.standardCost;
+  }
+
+  return (standardCost ?? 0) * assignment.mm;
+}
+
+/** 원가 비중 (0~1 비율). totalCost > 0 보장, 0 나눗셈 안전 처리. */
+export function costShare(cost: number, totalCost: number): number {
+  return totalCost > 0 ? cost / totalCost : 0;
 }
