@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { projects, employees, grades, assignments, weeklyReports } from '$lib/data/mock';
   import { projectPnl } from '$lib/pnl';
   import { projectHealth } from '$lib/health';
@@ -322,13 +323,13 @@
           <tr
             class="data-row"
             class:data-row--stopped={isStopped}
-            onclick={() => goto(`/project/${p.code}`)}
+            onclick={() => goto(`${base}/project/${p.code}`)}
           >
             <!-- 프로젝트명 -->
             <td class="col-name">
               <a
                 class="row-link"
-                href="/project/{p.code}"
+                href="{base}/project/{p.code}"
                 onclick={(e) => e.stopPropagation()}
               >{p.name}</a>
             </td>

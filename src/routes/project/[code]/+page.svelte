@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { base } from '$app/paths';
   import { projectPnl, assignmentCost } from '$lib/pnl';
   import { formatAmount, formatPercent, marginSignal } from '$lib/format';
   import { grades, employees, projects, assignments } from '$lib/data/mock';
@@ -70,12 +71,12 @@
   <div class="not-found">
     <p class="not-found__code">404</p>
     <p class="not-found__msg">프로젝트를 찾을 수 없습니다 — 코드: <code>{code}</code></p>
-    <a class="back-link" href="/">포트폴리오로 돌아가기</a>
+    <a class="back-link" href="{base}/">포트폴리오로 돌아가기</a>
   </div>
 {:else}
   <div class="page">
     <div class="page-header">
-      <a class="back-link" href="/">← 포트폴리오</a>
+      <a class="back-link" href="{base}/">← 포트폴리오</a>
       <h1 class="page-title">{project.name}</h1>
       <p class="meta">{project.client} · {project.startDate} ~ {project.endDate}</p>
     </div>
