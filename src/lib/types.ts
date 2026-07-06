@@ -39,6 +39,16 @@ export interface Project {
   startDate: string;
   /** 종료일 (ISO 8601, YYYY-MM-DD) */
   endDate: string;
+  /** 담당 PM 이름 */
+  pm?: string;
+  /** 프로젝트 생애주기 */
+  lifecycle?: '제안' | '진행' | '완료' | '중단';
+  /** 진척률 (0~100) */
+  progressRate?: number;
+  /** 계획 종료일 (ISO 8601, YYYY-MM-DD) */
+  plannedEndDate?: string;
+  /** 실제 종료일 (ISO 8601, YYYY-MM-DD) */
+  actualEndDate?: string;
 }
 
 /** 투입 배정 — 직원 × 프로젝트 × M/M */
@@ -65,4 +75,26 @@ export interface ProjectPnL {
   margin: number;
   /** 마진율 = margin / revenue, 범위 −∞~1 (0~1 비율) */
   marginRate: number;
+}
+
+/** 주간 보고 */
+export interface WeeklyReport {
+  projectCode: string;
+  /** ISO 주차 표기 (예: "2026-W26") */
+  week: string;
+  progressRate: number;
+  issues: string;
+  nextPlan: string;
+}
+
+/** 프로젝트 헬스 등급 */
+export type HealthGrade = '정상' | '주의' | '위험';
+
+/** 헬스 이상 사유 */
+export type HealthReason = '저마진' | '일정지연' | '적자';
+
+/** 프로젝트 헬스 종합 */
+export interface ProjectHealth {
+  grade: HealthGrade;
+  reasons: HealthReason[];
 }
