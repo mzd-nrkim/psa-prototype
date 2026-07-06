@@ -1,11 +1,39 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { base } from '$app/paths';
+  import { page } from '$app/state';
 
   let { children }: { children: Snippet } = $props();
+
+  // 전역 네비게이션 — 최상위 라우트를 여기 한 줄로 추가하면 자동 연결된다.
+  const navItems = [
+    { href: '/', label: '대시보드' },
+    { href: '/people', label: '임직원 현황' },
+  ];
+
+  // base를 제외한 현재 경로. 활성 항목 판정에 사용.
+  const currentPath = $derived(page.url.pathname.slice(base.length) || '/');
+
+  function isActive(href: string): boolean {
+    if (href === '/') return currentPath === '/';
+    return currentPath === href || currentPath.startsWith(href + '/');
+  }
 </script>
 
 <header class="app-header">
   <span class="app-header__title">PSA — 프로젝트 경제성 레이어</span>
+  <nav class="app-nav">
+    {#each navItems as item (item.href)}
+      <a
+        class="app-nav__link"
+        class:app-nav__link--active={isActive(item.href)}
+        href="{base}{item.href}"
+        aria-current={isActive(item.href) ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
+    {/each}
+  </nav>
 </header>
 
 <main class="app-content">
@@ -96,6 +124,33 @@
     font-weight: 600;
     color: var(--ink);
     letter-spacing: -0.01em;
+  }
+
+  .app-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 24px;
+  }
+
+  .app-nav__link {
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.12s, background-color 0.12s;
+  }
+
+  .app-nav__link:hover {
+    color: var(--text);
+    background-color: var(--surface-muted);
+  }
+
+  .app-nav__link--active {
+    color: var(--accent);
+    background-color: var(--accent-weak);
   }
 
   /* =========================================================
