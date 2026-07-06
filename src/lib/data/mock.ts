@@ -30,7 +30,7 @@
  * ─────────────────────────────────────────────────────────────────────
  */
 
-import type { Grade, Employee, Project, Assignment } from '../types.js';
+import type { Grade, Employee, Project, Assignment, WeeklyReport } from '../types.js';
 
 // ─── 등급 (standardCost·billRate 단위: 만원/월) ─────────────────────────────
 export const grades: Grade[] = [
@@ -49,9 +49,12 @@ export const employees: Employee[] = [
   { id: 'E-05', name: '정도현', gradeId: 'G-02' }, // 중급
   { id: 'E-06', name: '강유진', gradeId: 'G-01' }, // 초급
   { id: 'E-07', name: '윤태양', gradeId: 'G-04' }, // 특급
+  { id: 'E-08', name: '이수진', gradeId: 'G-02' }, // 중급 (벤치)
+  { id: 'E-09', name: '한다운', gradeId: 'G-01' }, // 초급 (벤치)
 ];
 
 // ─── 프로젝트 (contractAmount 단위: 만원) ────────────────────────────────────
+// 헬스 등급 예상: P-001 정상 / P-002 주의(일정지연) / P-003 위험(적자+지연) / P-004 정상(제안)
 export const projects: Project[] = [
   {
     code: 'P-001',
@@ -60,6 +63,11 @@ export const projects: Project[] = [
     contractAmount: 15000,
     startDate: '2026-01-01',
     endDate: '2026-06-30',
+    pm: '김민준',
+    lifecycle: '진행',
+    progressRate: 75,
+    plannedEndDate: '2026-06-30',
+    actualEndDate: '2026-06-30',
   },
   {
     code: 'P-002',
@@ -68,6 +76,11 @@ export const projects: Project[] = [
     contractAmount: 8200,
     startDate: '2026-02-01',
     endDate: '2026-07-31',
+    pm: '박지훈',
+    lifecycle: '진행',
+    progressRate: 45,
+    plannedEndDate: '2026-07-31',
+    actualEndDate: '2026-08-15',
   },
   {
     code: 'P-003',
@@ -76,6 +89,23 @@ export const projects: Project[] = [
     contractAmount: 6000,
     startDate: '2026-03-01',
     endDate: '2026-08-31',
+    pm: '윤태양',
+    lifecycle: '중단',
+    progressRate: 30,
+    plannedEndDate: '2026-08-31',
+    actualEndDate: '2026-09-15',
+  },
+  {
+    code: 'P-004',
+    name: 'D물류 시스템 개선',
+    client: 'D물류',
+    contractAmount: 5000,
+    startDate: '2026-09-01',
+    endDate: '2026-12-31',
+    pm: '최수아',
+    lifecycle: '제안',
+    progressRate: 0,
+    plannedEndDate: '2026-12-31',
   },
 ];
 
@@ -96,4 +126,16 @@ export const assignments: Assignment[] = [
   { projectCode: 'P-003', employeeId: 'E-07', mm: 4 },
   { projectCode: 'P-003', employeeId: 'E-01', mm: 2 },
   { projectCode: 'P-003', employeeId: 'E-02', mm: 2 },
+];
+
+// ─── 주간 보고 ────────────────────────────────────────────────────────────────
+// P-001: W26·W27 모두 작성 / P-002: W26만 작성(W27 누락 시연) / P-003: W26만 / P-004: 없음(제안)
+export const weeklyReports: WeeklyReport[] = [
+  // P-001: 2주 연속 작성
+  { projectCode: 'P-001', week: '2026-W26', progressRate: 70, issues: '서버 환경 설정 지연', nextPlan: '모듈 인터페이스 확정' },
+  { projectCode: 'P-001', week: '2026-W27', progressRate: 75, issues: '없음', nextPlan: 'UAT 준비' },
+  // P-002: W26만 작성 — W27 미작성(누락)
+  { projectCode: 'P-002', week: '2026-W26', progressRate: 40, issues: '데이터 정합성 이슈', nextPlan: '데이터 클렌징 및 파이프라인 재검증' },
+  // P-003: W26만 작성
+  { projectCode: 'P-003', week: '2026-W26', progressRate: 30, issues: '예산 초과 및 고객 요구사항 변경', nextPlan: '범위 재협의' },
 ];
