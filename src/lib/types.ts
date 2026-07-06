@@ -18,6 +18,16 @@ export interface Grade {
   billRate: number;
 }
 
+/** 등급 시점단가 이력 — 유효 기간별 표준 인건원가 */
+export interface GradeRate {
+  gradeId: string;
+  standardCost: number;
+  /** 유효 시작일 (ISO 8601, YYYY-MM-DD) */
+  validFrom: string;
+  /** 유효 종료일 (ISO 8601, YYYY-MM-DD), null = 현재 유효 */
+  validTo: string | null;
+}
+
 /** 직원 */
 export interface Employee {
   id: string;
@@ -57,6 +67,10 @@ export interface Assignment {
   employeeId: string;
   /** 투입 M/M (man-month, 소수점 허용) */
   mm: number;
+  /** 투입 시작일 (ISO 8601, YYYY-MM-DD) — 시점단가 선택용 */
+  startDate?: string;
+  /** 배정 등급 ID — employee.gradeId와 다를 때 override */
+  assignedGradeId?: string;
 }
 
 /**
