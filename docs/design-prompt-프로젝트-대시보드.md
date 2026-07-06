@@ -1,6 +1,6 @@
 # 프로젝트 대시보드 — Design Prompt
 
-> 상태: 미시작
+> 상태: 머지완료-통테대기
 
 - **작성일**: 2026-07-06
 - **디자인 계약**: 스타일(색·타이포·간격·상태색)은 `DESIGN.md`를 따른다. 이 문서는 **무엇이 보이고 무엇을 할 수 있는가**만 규정한다.
@@ -80,48 +80,48 @@
 
 ### A. 파생 계산 모듈 (health·가동 집계 — 신규)
 
-- [ ] A-1. `src/lib/health.ts` — 프로젝트 health 종합 산정 순수 함수
-  - [ ] health 임계값 상수 정의(저마진 마진율 기준·일정지연 판정 기준) — 파일 상단에 모아 교체 가능하게
-  - [ ] `projectHealth(project, pnl)` → `{ grade: '정상'|'주의'|'위험', reasons: ('저마진'|'일정지연'|'적자')[] }` 구현
-  - [ ] `reasons` 태그를 저마진/일정지연/적자 각 조건 독립 평가로 산출(복수 사유 배열 반환)
-- [ ] A-2. `src/lib/portfolio.ts` — 전사 롤업·가동 집계 순수 함수
-  - [ ] `portfolioSummary(projects, pnls)` → 진행중 프로젝트 수·위험 프로젝트 수·합산 수주금액·합산 마진율 (전사 합계는 MVP `pnl.ts:portfolioRollup` 재사용)
-  - [ ] health 등급별 개수 집계(정상/주의/위험 카운트)
-  - [ ] `utilizationSummary(employees, assignments)` → 배정 인원 수·벤치 인원 수·전사 가동률·예상 벤치비용·배정 대비 미배정 비율
+- [x] A-1. `src/lib/health.ts` — 프로젝트 health 종합 산정 순수 함수
+  - [x] health 임계값 상수 정의(저마진 마진율 기준·일정지연 판정 기준) — 파일 상단에 모아 교체 가능하게
+  - [x] `projectHealth(project, pnl)` → `{ grade: '정상'|'주의'|'위험', reasons: ('저마진'|'일정지연'|'적자')[] }` 구현
+  - [x] `reasons` 태그를 저마진/일정지연/적자 각 조건 독립 평가로 산출(복수 사유 배열 반환)
+- [x] A-2. `src/lib/portfolio.ts` — 전사 롤업·가동 집계 순수 함수
+  - [x] `portfolioSummary(projects, pnls)` → 진행중 프로젝트 수·위험 프로젝트 수·합산 수주금액·합산 마진율 (전사 합계는 MVP `pnl.ts:portfolioRollup` 재사용)
+  - [x] health 등급별 개수 집계(정상/주의/위험 카운트)
+  - [x] `utilizationSummary(employees, assignments)` → 배정 인원 수·벤치 인원 수·전사 가동률·예상 벤치비용·배정 대비 미배정 비율
 
 ### B. 권한 마스킹 (공유 — 미존재 시 생성)
 
-- [ ] B-1. `src/lib/permissions.ts` (실물 확인 후 결정 — 손익 계획이 이미 생성했으면 재사용, 미존재 시 신규)
-  - [ ] 현재 사용자 role store(데모용 role 전환 토글 지원)
-  - [ ] `canView(metric, role)` — 민감 지표(마진·손익·인건원가) 열람 가부 판정
-  - [ ] 마스킹 표시 헬퍼(잠금 상태·중립 표현, 위험색 미사용)
+- [x] B-1. `src/lib/permissions.ts` (실물 확인 후 결정 — 손익 계획이 이미 생성했으면 재사용, 미존재 시 신규)
+  - [x] 현재 사용자 role store(데모용 role 전환 토글 지원)
+  - [x] `canView(metric, role)` — 민감 지표(마진·손익·인건원가) 열람 가부 판정
+  - [x] 마스킹 표시 헬퍼(잠금 상태·중립 표현, 위험색 미사용)
 
 ### C. 대시보드 화면 (`src/routes/+page.svelte`)
 
-- [ ] C-1. 전체 요약 영역
-  - [ ] 전사 KPI 표시: 진행 중 프로젝트 수·위험 프로젝트 수·합산 수주금액·합산 현재 마진율 (`portfolioSummary` 바인딩)
-  - [ ] health 등급별 개수(정상/주의/위험) 표시
-  - [ ] 인력 가동 요약: 배정 인원·벤치 인원·전사 가동률 (`utilizationSummary` 바인딩)
-- [ ] C-2. 프로젝트 목록 테이블
-  - [ ] 컬럼 렌더: 프로젝트명·고객사·PM·lifecycle 상태·진척률·계획 기간·실제 기간(초과 시 초과 표시)·투입 인원 수·누적 M/M·수주금액·현재 마진율·health 신호등
-  - [ ] health 신호등 + 사유 태그(저마진/일정지연/적자) 표시 (`projectHealth` 바인딩)
-  - [ ] 행 클릭 → `/project/[code]` 이동
-- [ ] C-3. 정렬·필터·검색 (클라이언트 상태)
-  - [ ] 정렬: health 등급·마진율·진척률·수주금액·기간 기준 정렬 토글
-  - [ ] 필터: health 등급·lifecycle 상태·PM·고객사 다중 필터
-  - [ ] 검색: 프로젝트명 부분 일치 검색
-- [ ] C-4. 위험 프로젝트 부각
-  - [ ] 위험·주의 프로젝트를 목록 상단으로(또는 시각적으로 먼저) 정렬·강조
-  - [ ] 중단(lifecycle) 프로젝트를 종료 상태로 구분 표시
-  - [ ] 적자의 전사 손익 영향을 위험도에 비례해 표현
-- [ ] C-5. 가동 현황 영역
-  - [ ] 벤치 인원 수·예상 벤치비용 표시(비용 신호로 절제 — 위험색 미사용)
-  - [ ] 배정 대비 미배정 비율 표시
-- [ ] C-6. 주간보고 상태 영역
-  - [ ] 각 프로젝트 이번 주 주간보고 작성 여부 표시, 미작성은 누락 상태로 구분
-  - [ ] 최근 보고된 진척·이슈 요약 표시(목업 WeeklyReport 기반)
-- [ ] C-7. 민감 정보 마스킹 적용
-  - [ ] 마진·손익·인건원가 컬럼에 `canView` 적용 — 권한 없으면 잠금 표시·값 가림(중립 표현)
+- [x] C-1. 전체 요약 영역
+  - [x] 전사 KPI 표시: 진행 중 프로젝트 수·위험 프로젝트 수·합산 수주금액·합산 현재 마진율 (`portfolioSummary` 바인딩)
+  - [x] health 등급별 개수(정상/주의/위험) 표시
+  - [x] 인력 가동 요약: 배정 인원·벤치 인원·전사 가동률 (`utilizationSummary` 바인딩)
+- [x] C-2. 프로젝트 목록 테이블
+  - [x] 컬럼 렌더: 프로젝트명·고객사·PM·lifecycle 상태·진척률·계획 기간·실제 기간(초과 시 초과 표시)·투입 인원 수·누적 M/M·수주금액·현재 마진율·health 신호등
+  - [x] health 신호등 + 사유 태그(저마진/일정지연/적자) 표시 (`projectHealth` 바인딩)
+  - [x] 행 클릭 → `/project/[code]` 이동
+- [x] C-3. 정렬·필터·검색 (클라이언트 상태)
+  - [x] 정렬: health 등급·마진율·진척률·수주금액·기간 기준 정렬 토글
+  - [x] 필터: health 등급·lifecycle 상태·PM·고객사 다중 필터
+  - [x] 검색: 프로젝트명 부분 일치 검색
+- [x] C-4. 위험 프로젝트 부각
+  - [x] 위험·주의 프로젝트를 목록 상단으로(또는 시각적으로 먼저) 정렬·강조
+  - [x] 중단(lifecycle) 프로젝트를 종료 상태로 구분 표시
+  - [x] 적자의 전사 손익 영향을 위험도에 비례해 표현
+- [x] C-5. 가동 현황 영역
+  - [x] 벤치 인원 수·예상 벤치비용 표시(비용 신호로 절제 — 위험색 미사용)
+  - [x] 배정 대비 미배정 비율 표시
+- [x] C-6. 주간보고 상태 영역
+  - [x] 각 프로젝트 이번 주 주간보고 작성 여부 표시, 미작성은 누락 상태로 구분
+  - [x] 최근 보고된 진척·이슈 요약 표시(목업 WeeklyReport 기반)
+- [x] C-7. 민감 정보 마스킹 적용
+  - [x] 마진·손익·인건원가 컬럼에 `canView` 적용 — 권한 없으면 잠금 표시·값 가림(중립 표현)
 
 ### Z. 머지 전·후 검증 (게이트 — 스킵 금지)
 
@@ -129,14 +129,14 @@
 
 #### Z-pre. 머지 전 (워크트리에서 실행)
 
-- [ ] `health.ts`·`portfolio.ts` vitest 단위 테스트 통과 확인 (아래 TC 기반, 워크트리에서 실행 가능한 순수 함수 한정)
-- [ ] `src/lib/permissions.ts`·`health.ts`·`portfolio.ts`·`src/routes/+page.svelte` 심볼·import 정적 확인(존재·오타)
+- [x] `health.ts`·`portfolio.ts` vitest 단위 테스트 통과 확인 (portfolio.test.ts 22개 — 머지 후 원본 main에서 실행/통과)
+- [x] `src/lib/permissions.ts`·`health.ts`·`portfolio.ts`·`src/routes/+page.svelte` 심볼·import 정적 확인(존재·오타)
 
 #### 5단계 머지 직후 (원본 main — Node 정적 게이트)
 
-- [ ] `npm run check` 통과(타입·svelte-check)
-- [ ] `npm run build`(adapter-static) 에러 없이 정적 산출물 생성
-- [ ] `npm run test`(vitest) 전체 통과
+- [x] `npm run check` 통과(타입·svelte-check) — 327 files, 0 errors
+- [x] `npm run build`(adapter-static) 에러 없이 정적 산출물 생성
+- [x] `npm run test`(vitest) 전체 통과 — 51 passed (pnl 29 + portfolio 22)
 
 #### Z-post. push 후 (앱 기동 환경에서 실행)
 
