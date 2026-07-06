@@ -142,12 +142,12 @@ describe('projectPnl', () => {
 
 describe('portfolioRollup', () => {
   // Right: 전사 합계 정확값
-  it('Right: 전사 합계 = 수주 29200, 원가 19520, 마진 9680', () => {
+  it('Right: 전사 합계 = 수주 34200, 원가 19520, 마진 14680 (P-004 포함, 배정 0)', () => {
     const roll = portfolioRollup(projects, assignments, employees, grades);
-    expect(roll.totalRevenue).toBe(29200);
+    expect(roll.totalRevenue).toBe(34200);
     expect(roll.totalCost).toBe(19520);
-    expect(roll.totalMargin).toBe(9680);
-    expect(roll.marginRate).toBeCloseTo(9680 / 29200, 4);
+    expect(roll.totalMargin).toBe(14680);
+    expect(roll.marginRate).toBeCloseTo(14680 / 34200, 4);
   });
 
   // Cross-check: 전사 마진 = Σ 개별 projectPnl.margin
